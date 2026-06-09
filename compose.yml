@@ -4,7 +4,7 @@ services:
     user: "1000:1000"
     build: .
     ports:
-      - "8080:80"
+      - "53690:8000"
     volumes:
       - ./data:/data
     environment:
