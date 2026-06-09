@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "youngest-server"
+version = "1.0"
+description = """\
+    Lightweight file service that scans a configured directory for the youngest file \
+    and serves it.\
+    """
+requires-python = ">=3.15"
+dependencies = []
