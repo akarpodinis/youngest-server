@@ -11,11 +11,25 @@ DATA_DIRECTORY = '/data'
 DATE_PATTERN = r'(\d{1,2})-(\d{1,2})-(\d{2,4})'
 SERVER_PORT = 8000
 
+# MIME type mapping for file extensions
+MIME_TYPES = {
+    '.pdf': 'application/pdf',
+    '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    '.doc': 'application/msword',
+}
+
 logger = logging.getLogger('youngest-server')
 logging.basicConfig(
     format='%(levelname)-8s %(message)s',  # Pad logging format for the widest level CRITICAL
     level=os.getenv('LOGGING_LEVEL', 'INFO')
 )
+
+
+def get_content_type(filename: str) -> str:
+    """Determine the MIME type based on file extension."""
+    _, ext = os.path.splitext(filename)
+    ext_lower = ext.lower()
+    return MIME_TYPES.get(ext_lower, 'application/octet-stream')
 
 
 class FileHandler(BaseHTTPRequestHandler):
@@ -73,7 +87,7 @@ class FileHandler(BaseHTTPRequestHandler):
                 file_data = f.read()
             # Send response with caching headers
             self.send_response(200)
-            self.send_header('Content-Type', 'application/pdf')
+            self.send_header('Content-Type', get_content_type(youngest))
             self.send_header('Content-Length', str(len(file_data)))
             self.send_header('Cache-Control', 'max-age=86400, must-revalidate')
             self.send_header('Content-Disposition', f'attachment; filename={youngest}')
